@@ -14,4 +14,4 @@ description = "Substitutes for Rc and Option that facilitate sending data betwee
 deepsize = { version = "0.2.0", optional = true }
 
 [features]
-default = []
+disable_safety_checks = []

@@ -166,6 +166,7 @@ impl<T> SendRc<T> {
         self.ptr.as_mut()
     }
 
+    #[cfg(not(feature = "disable_safety_checks"))]
     #[inline]
     fn check_pinned(&self) -> Result<(), PinError> {
         let inner = self.inner();
@@ -178,11 +179,22 @@ impl<T> SendRc<T> {
         Ok(())
     }
 
+    #[cfg(not(feature = "disable_safety_checks"))]
     #[inline]
     fn assert_pinned(&self, op: &str) {
         self.check_pinned()
             .unwrap_or_else(|pinerr| pinerr.panic(op));
     }
+
+    #[cfg(feature = "disable_safety_checks")]
+    #[inline]
+    fn check_pinned(&self) -> Result<(), PinError> {
+        Ok(())
+    }
+
+    #[cfg(feature = "disable_safety_checks")]
+    #[inline]
+    fn assert_pinned(&self, _op: &str) {}
 
     /// Prepare to send `SendRc`s to another thread.
     ///
